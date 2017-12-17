@@ -41,7 +41,7 @@ def parse_email(email_as_string, include_headers):
             if extension in TEXT_FILE_EXTENSIONS or content_type in SUPPORTED_CONTENT_TYPES or \
                part.get_content_maintype() == 'text' or extension in ZIP_EXTENSIONS:
                 if part.get_filename():
-                    body.append("#BEGIN_ATTACHMENT: %s - content_type= %s" % (str(part.get_filename()), content_type))
+                    body.append("#BEGIN_ATTACHMENT: %s" % str(part.get_filename()))
                     if extension in ZIP_EXTENSIONS:
                         body.append("\n".join(zip.parse_zip(part, EMAIL_PART)))
                     else:

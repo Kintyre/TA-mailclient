@@ -43,7 +43,7 @@
 
 | Author | Oluwaseun Remi-Omosowon |
 | --- | --- |
-| App Version | 1.4.0 |
+| App Version | 1.3.0 |
 | Vendor Products | <ul><li>poplib</li><li>imaplib</li><li>SDK for Python 1.6.2</li></ul> |
 
 The TA-mailclient add-on fetches emails for Splunk to index from mailboxes
@@ -79,19 +79,15 @@ Images, videos and executables are not indexed.
 
 Includes:
 - Splunk SDK for Python (1.6.2)
-- mail_lib - supports parsing of emails and other file extensions
-    - magic.py - This is a copy of python-magic used to recognise file content types within zips.
-    - libmagic - Includes files required for libmagic on MacOS, and Windows. These files were taken from version 0.4.14 of libmagic 
+- file_parser/* - supports parsing of emails and other file extensions
 - mail_constants.py - A number of constants / defaults used throughout the mail_lib module.
 - mail_utils.py - Shared functions used in mail.py
 - mail_exceptions.py - exceptions raised by functions used in mail.py.
 
-Note that Python-magic is licensed under MIT which is included in this README.
-
 #### Release notes
 
 ##### About this release
-Version 1.4.0 of the TA-mailclient is compatible with:
+Version 1.3.0 of the TA-mailclient is compatible with:
 
 | Splunk Enterprise versions | 6.x |
 | --- | --- |
@@ -112,7 +108,6 @@ as it requires Python which comes with an HF or a full Splunk install.
 
 TA-mailclient includes the following new features:
 
-- File type detection using a python-magic (MIT license referenced below)
 - Made it more modular to supporting more file types in zips and in emails
 - Added support for zips and files within zips
 - Fixed unicode conversion of emails following contributions from Francois Lacombe on GitHub
@@ -135,7 +130,7 @@ TA-mailclient includes the following new features:
 
 ##### Known issues
 
-Currently no known issues in version 1.4.0 of TA-mailclient.
+Currently no known issues in version 1.3.0 of TA-mailclient.
 This is currently tested against the latest version of Splunk Enterprise.
 Issues can be reported and tracked on Github at this time.
 
@@ -375,33 +370,6 @@ This modular input supports multiple instances, and each input runs at separate 
 
 A copy of the Creative Commons Legal code has been added to the add-on detailing its license.
 
-#### Third Party libraries
-##### Python-magic
-Python-magic is included to recognise the content type of files within archives. This is licensed under MIT as detailed 
-below.
-
-###### License python-magic
-The MIT License (MIT)
-
-Copyright (c) 2001-2014 Adam Hupp
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 
 ## USER GUIDE
 

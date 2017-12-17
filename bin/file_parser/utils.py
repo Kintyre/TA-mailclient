@@ -3,7 +3,6 @@ This includes common functions that are required when dealing with mails
 """
 
 from email.header import decode_header
-import magic
 
 try:
     from cStringIO import StringIO
@@ -11,8 +10,6 @@ try:
 except ImportError:
     from StringIO import StringIO
 
-
-detect_filetype = magic.Magic(mime=True)
 MAIN_HEADERS = ('Date', 'Message-Id', 'Message-ID', 'From', 'To', 'Subject')
 ZIP_EXTENSIONS = {'.zip', '.docx'}
 EMAIL_PART = '$EMAIL$'

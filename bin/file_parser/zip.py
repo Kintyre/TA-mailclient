@@ -42,14 +42,18 @@ def parse_zip(part, part_name):
                 zipped_file = []
                 if not each_compressedfile.endswith('/'):
                     zipped_fextension = str(os.path.splitext(each_compressedfile)[1]).lower()
-                    zipped_file = ["#BEGIN_ATTACHMENT: %s/%s" % (zip_name, each_compressedfile)]
-                    if zipped_fextension in TEXT_FILE_EXTENSIONS:
+                    content_type = detect_filetype.from_buffer(zfp.open(each_compressedfile).read(1024))
+                    zipped_file = [
+                        "#BEGIN_ATTACHMENT: %s/%s - content_type= %s" % (zip_name, each_compressedfile, content_type)]
+                    if zipped_fextension in ZIP_EXTENSIONS:
+                        file_buff = zfp.open(each_compressedfile).read()
+                        zipped_file.extend(parse_zip(file_buff, each_compressedfile))
+                    elif zipped_fextension in TEXT_FILE_EXTENSIONS or \
+                            content_type.startswith('text/') or \
+                            content_type in SUPPORTED_CONTENT_TYPES:
                         f = zfp.open(each_compressedfile)
                         for line in f:
                             zipped_file.append(line)
-                    elif zipped_fextension in ZIP_EXTENSIONS:
-                        file_buff = zfp.open(each_compressedfile).read()
-                        zipped_file.extend(parse_zip(file_buff, each_compressedfile))
                     else:
                         zipped_file.append("#UNSUPPORTED_CONTENT: file_name = %s" % each_compressedfile)
                     zipped_file.append("#END_ATTACHMENT: %s/%s" % (zip_name, each_compressedfile))

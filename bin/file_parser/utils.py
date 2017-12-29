@@ -35,12 +35,18 @@ def getheader(header_text, default="ascii"):
 def recode_mail(part):
     cset = part.get_content_charset()
     if cset == "None":
-        cset = "ascii"
+        cset = 'ascii'
     try:
         if not part.get_payload(decode=True):
             result = u''
         else:
-            result = unicode(part.get_payload(decode=True), cset, "ignore").encode('utf8', 'xmlcharrefreplace').strip()
+            try:
+                result = unicode(part.get_payload(decode=True), cset, "ignore"
+                                 ).encode('utf8', 'xmlcharrefreplace').strip()
+            except (UnicodeDecodeError, UnicodeEncodeError, LookupError):
+                # Try using ascii. It would ignore all errors and xml escape anything greater than 127
+                result = unicode(part.get_payload(decode=True), 'ascii', "ignore"
+                                 ).encode('utf8', 'xmlcharrefreplace').strip()
     except TypeError:
         result = part.get_payload(decode=True).encode('utf8', 'xmlcharrefreplace').strip()
     return result

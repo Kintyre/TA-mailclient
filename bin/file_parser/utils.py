@@ -3,6 +3,7 @@ This includes common functions that are required when dealing with mails
 """
 
 from email.header import decode_header
+import sys
 
 try:
     from cStringIO import StringIO
@@ -40,13 +41,11 @@ def recode_mail(part):
         if not part.get_payload(decode=True):
             result = u''
         else:
-            try:
-                result = unicode(part.get_payload(decode=True), cset, "ignore"
-                                 ).encode('utf8', 'xmlcharrefreplace').strip()
-            except (UnicodeDecodeError, UnicodeEncodeError, LookupError):
-                # Try using ascii. It would ignore all errors and xml escape anything greater than 127
-                result = unicode(part.get_payload(decode=True), 'ascii', "ignore"
-                                 ).encode('utf8', 'xmlcharrefreplace').strip()
-    except TypeError:
+            result = unicode(part.get_payload(decode=True), cset, "ignore"
+                             ).encode('utf8', 'xmlcharrefreplace').strip()
+    except (UnicodeDecodeError, UnicodeEncodeError, LookupError):
         result = part.get_payload(decode=True).encode('utf8', 'xmlcharrefreplace').strip()
+    except:
+        e = sys.exc_info()[0]
+        result = u'Mail found with unexpected codec - %s' % e
     return result

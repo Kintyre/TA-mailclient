@@ -1,6 +1,7 @@
 import hashlib
 import os
 import socket
+import mail_constants
 
 
 def mail_connectivity_test(server, protocol, is_secure):
@@ -69,7 +70,7 @@ def bool_variable(x):
     elif x is "1" or x is "0":
         x = bool(int(x))
     else:
-        x = bool(int(1))
+        x = False
     return x
 
 

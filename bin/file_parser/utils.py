@@ -25,6 +25,14 @@ It already indexes all text/* including:
 No need to add this to the supported types list
 """
 
+def test_mail_encoding(cset):
+    try:
+        'hello'.encode(cset)
+        return True
+    except:
+        """ Codec Unsupported """
+        return False
+
 
 def getheader(header_text, default="ascii"):
     """ This decodes sections of the email header which could be represented in utf8 or other iso languages"""

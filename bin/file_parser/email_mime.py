@@ -22,6 +22,7 @@ def parse_email(email_as_string, include_headers):
     """
     message = email.message_from_string(email_as_string)
     mailheaders = Parser().parsestr(email_as_string, True)
+    do_not_delete = False
     headers = ["%s: %s" % (k, getheader(v)) for k, v in mailheaders.items() if k in MAIN_HEADERS]
     if include_headers:
         other_headers = ["%s: %s" % (k, getheader(v)) for k, v in mailheaders.items() if k not in MAIN_HEADERS]
@@ -40,25 +41,33 @@ def parse_email(email_as_string, include_headers):
             extension = str(os.path.splitext(part.get_filename() or '')[1]).lower()
             if extension in TEXT_FILE_EXTENSIONS or content_type in SUPPORTED_CONTENT_TYPES or \
                part.get_content_maintype() == 'text' or extension in ZIP_EXTENSIONS:
+                cset = part.get_content_charset()
                 if part.get_filename():
                     body.append("#BEGIN_ATTACHMENT: %s" % str(part.get_filename()))
                     if extension in ZIP_EXTENSIONS:
                         body.append("\n".join(zip.parse_zip(part, EMAIL_PART)))
                     else:
-                        body.append(recode_mail(part))
+                        if test_mail_encoding(cset):
+                            body.append(recode_mail(part))
                     body.append("#END_ATTACHMENT: %s" % str(part.get_filename()))
                 else:
-                    body.append(recode_mail(part))
+                    if test_mail_encoding(cset):
+                        body.append(recode_mail(part))
+                    else:
+                        do_not_delete = True
             else:
                 body.append("#UNSUPPORTED_ATTACHMENT: file_name = %s - type = %s ; disposition=%s" % (
                     part.get_filename(), content_type, content_disposition))
             body.append("#END_OF_MULTIPART_%d" % part_number)
             part_number += 1
     else:
+        """TODO: Need to check get_charset here"""
         body.append(recode_mail(message))
     """mail_for_index = [MESSAGE_PREAMBLE]"""
     mail_for_index = []
     mail_for_index.extend(headers + body)
     index_mail = "\n".join(mail_for_index)
     message_time = float(mktime_tz(parsedate_tz(message['Date'])))
+    if do_not_delete:
+        message['Message-ID'] = None
     return [message_time, message['Message-ID'], index_mail]

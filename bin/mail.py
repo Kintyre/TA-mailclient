@@ -260,6 +260,12 @@ class Mail(Script):
                     if result == 'OK':
                         raw_email = email_data[0][1]
                         message_time, message_mid, msg = email_mime.parse_email(raw_email, self.include_headers)
+                        if message_mid is None:
+                            mails_retrieved += 1
+                            self.log(EventWriter.WARN,
+                                     "Retrieved a mail from mailbox, %s, that could not be indexed" % self.username)
+                            num += 1
+                            continue
                         if locate_checkpoint(self.checkpoint_dir, message_mid) and (
                                         self.mailbox_cleanup == 'delayed' or self.mailbox_cleanup == 'delete'):
                             mailclient.uid('store', email_ids[num], '+FLAGS', '(\\Deleted)')
@@ -320,6 +326,11 @@ class Mail(Script):
                 (header, msg, octets) = mailclient.retr(num)
                 raw_email = '\n'.join(msg)
                 message_time, message_mid, msg = email_mime.parse_email(raw_email, self.include_headers)
+                if message_mid is None:
+                    mails_retrieved += 1
+                    self.log(EventWriter.WARN,
+                             "Retrieved a mail from mailbox, %s, that could not be indexed" % self.username)
+                    continue
                 if not locate_checkpoint(self.checkpoint_dir, message_mid):
                     """index the mail if it is readonly or if the mail will be deleted"""
                     logevent = Event(

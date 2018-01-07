@@ -26,6 +26,8 @@ No need to add this to the supported types list
 """
 
 def test_mail_encoding(cset):
+    if cset == "None" or cset is None:
+        cset = 'ascii'
     try:
         'hello'.encode(cset)
         return True

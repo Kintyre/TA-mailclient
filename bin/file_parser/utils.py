@@ -45,7 +45,7 @@ def getheader(header_text, default="ascii"):
 
 def recode_mail(part):
     cset = part.get_content_charset()
-    if cset == "None":
+    if cset == "None" or cset is None:
         cset = 'ascii'
     try:
         if not part.get_payload(decode=True):
